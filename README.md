@@ -13,6 +13,6 @@ Located in the test_data directory is a script to download necessary data for th
 
 ## DiSk0
 
-Type make to generate a DiSkO image from the TART and cygnus data.
+Type make to generate a DiSkO image from the TART and cygnus data. An example is shown below
 
-![GitHub Logo](img/cygnus_2015_11_15_20_35_44_UTC_mu.svg)
+![DiSkO image of Cygnus](img/cygnus_2015_11_15_20_35_44_UTC_mu.svg)

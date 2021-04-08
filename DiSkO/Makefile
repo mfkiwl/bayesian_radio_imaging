@@ -7,7 +7,7 @@ tart:
 	disko_bayes --ms ../test_data/test.ms  --mu --pcf --var --PNG --SVG \
 		--fov 170 --arcmin=90  \
 		--sigma-v=0.15 --posterior post.h5 \
-		--dir test_out --title 'bayes_tart' 
+		--dir test_out --title 'bayes_tart' --show-sources
 
 cygnus:
 	disko_bayes --ms ../test_data/cyg2052.ms \
