@@ -1,3 +1,15 @@
 ## Using DiSkO for imaging
 
-Instructions go here when Tim gets some time.
+This uses the disko python package. To install use:
+
+    make install
+
+Target in the makefile.
+
+## TART
+
+    make tart
+
+## Cygnus
+
+    make cygnus
