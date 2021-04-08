@@ -5,7 +5,7 @@ install:
 	
 tart:
 	disko_bayes --ms ../test_data/test.ms  --mu --pcf --var --PNG \
-		--fov 155 --arcmin=90  \
+		--fov 170 --arcmin=90  \
 		--sigma-v=0.15 --posterior post.h5 \
 		--dir test_out --title 'bayes_tart' 
 
