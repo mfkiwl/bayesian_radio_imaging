@@ -1,11 +1,12 @@
 # Test Data
 
-There are two bits. One from the VLA [Rick Perley 2 GHz of the Cygnus A radio galaxy. The other is an all-sky image from the TART telescope.
 
-To get the cygnus data type
+## Meerkat Calibration Data
 
-    make
-    
+This is an observation targeting the ESO137 field. I split out scan 1 and 3 which are on the calibrator J1939-6342 (only one calibrator because the primary was close enough to the target). I don't have the source parameters for you right now but I'll look them up. If you want to get started, the MODEL_DATA column has been populated with what CASA thinks the model visibilities of the source should be. CORRECED_DATA has the inverse gain solutions applied to the raw data which resides in the DATA column. The WEIGHT_SPECTRUM column contains only ones at this stage. Initial flagging was done with tricolor so the FLAG column is populated but I used a fairly conservative flagging strategy so there will still be some low-level RFI in the data. I am busy trying to figure out how to also split the gain tables by scan. Once I have these I'll place the CASA solutions there for reference as well. I am also busy tidying up an old repo where I started implementing generic telescope and source models. 
+
+wget -m ftp://elwood.ru.ac.za:/pub/bester/1557347448_J1939_6342_scan1and3.ms
+
     
 ## TART data
 
@@ -18,4 +19,5 @@ To get the cygnus data type
 
 ## Cygnus Data
 
+* The FoV is 0.05 degrees, with a pixel size of 0.03 arcmin
 
