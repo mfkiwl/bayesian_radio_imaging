@@ -112,14 +112,14 @@ def read_ms(ms_file, num_vis, res_arcmin, chunks=50000, channel=0, field_id=0, p
     n_max = len(good_data)
 
     if n_max <= num_vis:
-        indices = np.arange(n_max)
+        indices = good_data # np.indices(n_max)
     else:
         indices = np.random.choice(
             good_data, min(num_vis, n_max), replace=False
         )
+        indices = np.sort(indices)
 
     # sort the indices to keep them in order (speeds up IO)
-    indices = np.sort(indices)
     #
     #
     #   Now read the remaining data
