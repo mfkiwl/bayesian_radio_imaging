@@ -1,6 +1,7 @@
 import argparse
 import logging
 import numpy as np
+import matplotlib.pyplot as plt
 
 from casacore.tables import table
 
@@ -135,6 +136,10 @@ def read_ms(ms_file, num_vis, res_arcmin, chunks=50000, channel=0, field_id=0, p
     v_arr = uvw[indices,1]
     w_arr = uvw[indices,2]
     
+    rms_arr = sigma.T
+    
+    timestamp = ms.getcol("TIME")[indices]
+    print(timestamp.shape)
     return u_arr, v_arr, w_arr, frequency, raw_vis, corrected_vis, timestamp, rms_arr
     
     
@@ -145,8 +150,18 @@ if __name__=="__main__":
     parser.add_argument('--ms', required=False, default=None, help="visibility file")
     parser.add_argument('--channel', type=int, default=0, help="Use this frequency channel.")
     parser.add_argument('--field', type=int, default=0, help="Use this FIELD_ID from the measurement set.")
+    parser.add_argument('--arcmin', type=float, default=1.0, help="Resolution limit for baseline selection.")
     parser.add_argument('--title', required=False, default="disko", help="Prefix the output files.")
-    parser.add_argument('--nvis', type=int, default=1000, help="Number of visibilities to use.")
+    parser.add_argument('--nvis', type=int, default=10000, help="Number of visibilities to use.")
+
+    source_json = None
+
+    ARGS = parser.parse_args()
+
+    num_vis = ARGS.nvis
+    res_arcmin = ARGS.arcmin
+    channel = ARGS.channel
+    field_id = ARGS.field
 
     source_json = None
 
@@ -159,7 +174,21 @@ if __name__=="__main__":
     chunks = 10000
     print("Getting Data from MS file: {}".format(ARGS.ms))
 
-    u_arr, v_arr, w_arr, frequency, raw_vis, corrected_vis, hdr, tstamp, rms = read_ms(
+    u_arr, v_arr, w_arr, frequency, raw_vis, corrected_vis, tstamp, rms = read_ms(
         ARGS.ms, num_vis, res_arcmin, chunks, channel, field_id
     )
 
+    plt.plot(tstamp, np.real(raw_vis), '.')
+    plt.show()
+    
+    #plt.plot(u_arr, corrected_vis, '.')
+    #plt.show()
+    print(f"Raw Mean {np.mean(np.abs(raw_vis))}")
+    print(f"Corrected Mean {np.mean(np.abs(corrected_vis))}")
+    
+    plt.plot(np.real(raw_vis), np.imag(raw_vis), '.', label="Raw")
+    plt.plot(np.real(corrected_vis), np.imag(corrected_vis), '.', label="Corrected")
+    plt.grid(True)
+    plt.title(f"Raw and Corrected Complex Vis N={num_vis}")
+    plt.legend()
+    plt.show()

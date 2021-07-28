@@ -249,7 +249,9 @@ if __name__ == '__main__':
                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--ms', required=False, default=None, help="visibility file")
     parser.add_argument('--channel', type=int, default=0, help="Use this frequency channel.")
+    parser.add_argument('--pol', type=int, default=0, help="Polarization selection.")
     parser.add_argument('--field', type=int, default=0, help="Use this FIELD_ID from the measurement set.")
+    parser.add_argument('--arcmin', type=float, default=1.0, help="Resolution limit for baseline selection.")
     parser.add_argument('--title', required=False, default="disko", help="Prefix the output files.")
     parser.add_argument('--nvis', type=int, default=1000, help="Number of visibilities to use.")
 
@@ -258,10 +260,9 @@ if __name__ == '__main__':
     ARGS = parser.parse_args()
 
     num_vis = ARGS.nvis
-    res_arcmin = 1
+    res_arcmin = ARGS.arcmin
     channel = ARGS.channel
     field_id = ARGS.field
-    chunks = 10000
     print("Getting Data from MS file: {}".format(ARGS.ms))
 
     u_arr, v_arr, w_arr, frequency, raw_vis, corrected_vis, hdr, tstamp, rms = read_ms(
