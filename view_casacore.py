@@ -168,7 +168,7 @@ if __name__=="__main__":
     ARGS = parser.parse_args()
 
     num_vis = ARGS.nvis
-    res_arcmin = 1
+    res_arcmin = ARGS.arcmin
     channel = ARGS.channel
     field_id = ARGS.field
     chunks = 10000
