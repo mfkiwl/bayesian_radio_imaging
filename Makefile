@@ -1,4 +1,7 @@
 view:
+	python3 view_casacore.py --ms test_data/1557347448_J1939_6342_XXscan1chan950to1050.ms
+
+view_dask:
 	python3 view_data.py --ms test_data/1557347448_J1939_6342_XXscan1chan950to1050.ms
 
 	
