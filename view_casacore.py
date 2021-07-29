@@ -31,7 +31,7 @@ def get_resolution_max_baseline(res_arcmin, frequency):
 
 
 
-def read_ms(ms_file, num_vis, res_arcmin, chunks=50000, channel=0, field_id=0, pol=0):
+def read_ms(ms_file, num_vis, res_arcmin, channel=0, field_id=0, pol=0):
     
     ms = table(ms_file)
 
@@ -43,6 +43,7 @@ def read_ms(ms_file, num_vis, res_arcmin, chunks=50000, channel=0, field_id=0, p
     ant = table(ms.getkeyword("ANTENNA"))
     
     ant_p = ant.getcol("POSITION")
+    logger.info("Antenna Positions {}".format(ant_p.shape))
     
     data = ms.getcol("DATA")
 
@@ -140,7 +141,7 @@ def read_ms(ms_file, num_vis, res_arcmin, chunks=50000, channel=0, field_id=0, p
     
     timestamp = ms.getcol("TIME")[indices]
     print(timestamp.shape)
-    return u_arr, v_arr, w_arr, frequency, raw_vis, corrected_vis, timestamp, rms_arr
+    return ant_p, u_arr, v_arr, w_arr, frequency, raw_vis, corrected_vis, timestamp, rms_arr
     
     
 if __name__=="__main__":
@@ -171,14 +172,30 @@ if __name__=="__main__":
     res_arcmin = ARGS.arcmin
     channel = ARGS.channel
     field_id = ARGS.field
-    chunks = 10000
     print("Getting Data from MS file: {}".format(ARGS.ms))
 
-    u_arr, v_arr, w_arr, frequency, raw_vis, corrected_vis, tstamp, rms = read_ms(
-        ARGS.ms, num_vis, res_arcmin, chunks, channel, field_id
+    ant_p, u_arr, v_arr, w_arr, frequency, raw_vis, corrected_vis, tstamp, rms = read_ms(
+        ARGS.ms, num_vis, res_arcmin, channel, field_id
     )
 
     plt.plot(tstamp, np.real(raw_vis), '.')
+    plt.show()
+    
+    from astropy.coordinates import EarthLocation
+    from astropy import units as u
+
+    ant_loc = [EarthLocation.from_geocentric(a[0], a[1], a[2], unit=u.meter) for a in ant_p]
+    
+    for i, pos in enumerate(ant_loc):
+        lat = float(pos.lat/u.deg)
+        lon = float(pos.lon/u.deg)
+        plt.plot(lat, lon, '.')
+    
+    for i, pos in enumerate(ant_loc):
+        lat = float(pos.lat/u.deg)
+        lon = float(pos.lon/u.deg)
+        plt.annotate(f'{i}', (lat, lon))
+        
     plt.show()
     
     #plt.plot(u_arr, corrected_vis, '.')
