@@ -41,15 +41,15 @@ def read_ms(ms_file, num_vis, res_arcmin, channel=0, field_id=0, pol=0):
     uvw = ms.getcol("UVW")
     
     ant = table(ms.getkeyword("ANTENNA"))
-    
+
+    obs = table(ms.getkeyword("OBSERVATION"))
+    print(obs.colnames())
+
     ant_p = ant.getcol("POSITION")
     logger.info("Antenna Positions {}".format(ant_p.shape))
     
     data = ms.getcol("DATA")
 
-    ant1 = ms.getcol("ANTENNA1")
-    ant2 = ms.getcol("ANTENNA2")
-    
     
     flags = ms.getcol("FLAG")[:, channel, pol]
     
@@ -115,10 +115,11 @@ def read_ms(ms_file, num_vis, res_arcmin, channel=0, field_id=0, pol=0):
     if n_max <= num_vis:
         indices = good_data # np.indices(n_max)
     else:
-        indices = np.random.choice(
-            good_data, min(num_vis, n_max), replace=False
-        )
-        indices = np.sort(indices)
+        indices = good_data[0:num_vis-1]
+        #indices = np.random.choice(
+            #good_data, min(num_vis, n_max), replace=False
+        #)
+        #indices = np.sort(indices)
 
     # sort the indices to keep them in order (speeds up IO)
     #
@@ -131,6 +132,12 @@ def read_ms(ms_file, num_vis, res_arcmin, channel=0, field_id=0, pol=0):
 
     raw_vis = ms.getcol("DATA")[indices, channel, pol]
 
+    #for col in ms.colnames():
+        #try:   
+            #print(f"{col}: {ms.getcol(col)[indices]}")
+        #except:
+            #pass
+
     corrected_vis = ms.getcol("CORRECTED_DATA")[indices, channel, pol]
 
     u_arr = uvw[indices,0]
@@ -140,10 +147,11 @@ def read_ms(ms_file, num_vis, res_arcmin, channel=0, field_id=0, pol=0):
     rms_arr = sigma.T
     
     timestamp = ms.getcol("TIME")[indices]
+    timestamp = timestamp - timestamp[0]
     print(timestamp.shape)
     return ant_p, u_arr, v_arr, w_arr, frequency, raw_vis, corrected_vis, timestamp, rms_arr
     
-    
+from plot_antenna_positions import plot_antenna_positions
 if __name__=="__main__":
     
     parser = argparse.ArgumentParser(description='DiSkO: Generate an Discrete Sky Operator Image using the web api of a TART radio telescope.', 
@@ -181,22 +189,7 @@ if __name__=="__main__":
     plt.plot(tstamp, np.real(raw_vis), '.')
     plt.show()
     
-    from astropy.coordinates import EarthLocation
-    from astropy import units as u
-
-    ant_loc = [EarthLocation.from_geocentric(a[0], a[1], a[2], unit=u.meter) for a in ant_p]
-    
-    for i, pos in enumerate(ant_loc):
-        lat = float(pos.lat/u.deg)
-        lon = float(pos.lon/u.deg)
-        plt.plot(lat, lon, '.')
-    
-    for i, pos in enumerate(ant_loc):
-        lat = float(pos.lat/u.deg)
-        lon = float(pos.lon/u.deg)
-        plt.annotate(f'{i}', (lat, lon))
-        
-    plt.show()
+    plot_antenna_positions(ant_p)
     
     #plt.plot(u_arr, corrected_vis, '.')
     #plt.show()
