@@ -2,7 +2,7 @@ import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 from astropy.coordinates import EarthLocation
 from astropy import units as u
-
+from cartopy.io.img_tiles import MapQuestOpenAerial
 import numpy as np
 
 def plot_antenna_positions(ant_p):
@@ -36,6 +36,8 @@ def plot_antenna_positions(ant_p):
 
 
     #ax.coastlines()
+    ax.add_image(MapQuestOpenAerial(), 2)
+    #ax.add_image(cartopy.io.img_tiles.GoogleTiles(cache=True))
     gl = ax.gridlines(draw_labels=True)
     gl.top_labels = False
     gl.left_labels = False
