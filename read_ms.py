@@ -109,6 +109,7 @@ def read_ms(ms, num_vis, res_arcmin, chunks=50000, channel=0, field_id=0):
             return ret
 
         for i, ds in enumerate(datasets):
+            print(ds.__dict__)
             logger.info(
                 "DATASET field_id={} shape: {}".format(ds.FIELD_ID, ds.DATA.data.shape)
             )
@@ -150,9 +151,11 @@ def read_ms(ms, num_vis, res_arcmin, chunks=50000, channel=0, field_id=0):
                     good_data = np.array(
                         np.where((flags == 0) & (bl < bl_max))
                     ).T.reshape((-1,))
+                    baselines = bl[np.where(bl < bl_max)]
                 else:
                     good_data = np.array(np.where(flags == 0)).T.reshape((-1,))
                 logger.info("Good Data {}".format(good_data.shape))
+                logger.info(f"Baselines {baselines.shape}")
 
                 logger.info("Maximum UVW: {}".format(limit_uvw))
                 logger.info("Minimum UVW: {}".format(np.min(np.abs(uvw), 0)))
