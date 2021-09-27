@@ -1,5 +1,5 @@
 reduced_meerkat:
-	wget -m ftp://elwood.ru.ac.za:/pub/bester/1557347448_J1939_6342_XXscan1chan950to1050.ms
+	wget -m ftp://elwood.ru.ac.za/pub/bester/1557347448_J1939_6342_XXscan1chan950to1050.ms.tar.gz
 
 meerkat:
 	wget -m ftp://elwood.ru.ac.za:/pub/bester/1557347448_J1939_6342_scan1and3.ms	
